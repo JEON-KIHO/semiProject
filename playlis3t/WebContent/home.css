@@ -1,0 +1,55 @@
+@charset "UTF-8";
+*{font-family:MD아롱체;}
+body{background:#E4F3E7;}
+#divPage{width:980px;
+ background:white;
+ box-shadow:10px 10px 10px #B9DEDF;
+ margin:auto; 
+ box-shadow:10px 10px 10px #B9DEDF;
+ padding:0px 0px 20px 0px;overflow:hidden;}
+#divMenu{margin:auto;
+ overflow:hidden;
+ background:#DAEAD9;
+ padding:15px 0px 15px 20px;
+ border-bottom:1px solid #DAEAD9;
+ margin:0px auto; text-align:center;}
+#divMenu .item{width:100px;
+ float:left;
+ text-align:center; padding: 0px 20px;font-family:궁서체;}
+#divHeader{text-align:center;}
+#divCondition{width:780px;
+ margin:auto; overflow:
+ hidden;padding:5px 10px 5px 10px;
+ border:1px solid #B9DEDF;
+ margin-bottom:10px;
+}
+ #divBottom{margin:0px auto; text-align:center;}
+#divSearch{float:left; }
+#divSort{float:right; }
+#tbl{width:500px;
+ float:left;
+ overflow:hidden;
+ margin:10px 0px 0px 50px;
+
+
+}
+#tbl1{width:300px;
+ float:right;
+ overflow:hidden;
+ margin:20px 50px 0px 0px;
+ 
+ 
+}
+#pagination{width:800px; margin:auto; text-align:center; padding:10px 0px 10px 0px;}
+.price, .quantity, .sum {text-align:right;}
+a{text-decoration:none; color:#192F5E;}
+a:hover{font-weight:bold;}
+select, input, button {height:23px;}
+table {border-collapse:collapse;}
+td{border:1px solid black; height:30px; font-size:12px; padding:0px 5px 0px 5px;}
+table .title{background:#EAEAEA; text-align:center;}
+table .row:hover{background:gray; color:white;}
+input, button, select, textarea {font-size:12px;}
+input[type='radio'], input[type='checkbox'], input[type='text'] {height:12px;}
+td button{text-align:center;}
+textarea{margin:5px 0px 5px 0px;}

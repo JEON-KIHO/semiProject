@@ -1,0 +1,45 @@
+@charset "UTF-8";
+#size{display:none;}
+body{background:#D1E9CA;}
+#divPage{width:480px;
+ background:#789F6F;
+ box-shadow:10px 10px 10px blak;
+ margin:auto; 
+ box-shadow:10px 10px 10px black;
+ padding:0px 0px 20px 0px;}
+#divMenu{margin:auto;
+ overflow:hidden;
+ background:#E2CC6C;
+ padding:15px 0px 15px 20px;
+ border-bottom:1px solid gray;
+ margin:0px auto; text-align:center;}
+#divMenu .item{width:100px;
+ float:left;
+ text-align:center; padding: 0px 20px;font-family:궁서체;}
+#divHeader{text-align:center;}
+#divCondition{width:400px;
+ margin:auto; overflow:
+ hidden;padding:5px 10px 5px 10px;
+ border:1px solid #EAE891;
+ margin-bottom:10px;
+ background:#EAE891;}
+ #divBottom{margin:0px auto; text-align:center;}
+#divSearch{float:left; }
+#divSort{float:right; }
+#tbl{width:400px;
+ margin:auto;
+ overflow:hidden;
+ background:#E9F7AB;}
+#pagination{width:400px; margin:auto; text-align:center; padding:10px 0px 10px 0px;}
+.price, .quantity, .sum {text-align:right;}
+a{text-decoration:none; color:#192F5E;}
+a:hover{font-weight:bold;}
+select, input, button {height:23px;}
+table {border-collapse:collapse;}
+td{border:1px solid black; height:30px; font-size:12px; padding:0px 5px 0px 5px;}
+table .title{background:#EAEAEA; text-align:center;}
+table .row:hover{background:gray; color:white;}
+input, button, select, textarea {font-size:12px;}
+input[type='radio'], input[type='checkbox'], input[type='text'] {height:12px;}
+td button{text-align:center;}
+textarea{margin:5px 0px 5px 0px;}
