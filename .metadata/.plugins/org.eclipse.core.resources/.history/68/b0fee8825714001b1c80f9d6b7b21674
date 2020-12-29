@@ -1,0 +1,244 @@
+package playlist;
+
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import database.Database;
+
+public class PlaylistDAO {
+	// likelist delete
+	public void likelistdelete(String id, int tcode) {
+		try {
+			String sql = "delete from likelist where ll_id=? and ll_tcode=?";
+			CallableStatement cs = Database.CON.prepareCall(sql);
+			cs.setString(1, id);
+			cs.setInt(2, tcode);
+			cs.execute();
+		} catch(Exception error) {
+			error.printStackTrace();
+		}
+	}
+	
+	// insert like
+	public void insertlike(String ll_id, int ll_tcode, int ll_tlike) {
+		try {
+			String sql = "insert into likelist(ll_id, ll_tcode, ll_tlike) values(?, ?, ?)";
+			PreparedStatement ps = Database.CON.prepareStatement(sql);
+			ps.setString(1, ll_id);
+			ps.setInt(2, ll_tcode);
+			ps.setInt(3, ll_tlike);
+			ps.execute();
+		} catch(Exception error) {
+			error.printStackTrace();
+		}
+	}
+	
+	// like list
+	public JSONObject likelist(String id) {
+		JSONObject jobj = new JSONObject();
+		try {
+			String sql = "select * from likelistinfo where ll_id=?";
+			PreparedStatement ps = Database.CON.prepareStatement(sql);
+			ps.setString(1, id);
+			ResultSet rs = ps.executeQuery();
+			JSONArray jArray = new JSONArray();
+			while(rs.next()) {
+				JSONObject obj = new JSONObject();
+				obj.put("ll_id", rs.getString("ll_id"));
+				obj.put("ll_tcode", rs.getInt("ll_tcode"));
+				obj.put("ll_tlike", rs.getInt("ll_tlike"));
+				obj.put("track_name", rs.getString("track_name"));
+				obj.put("album_name", rs.getString("album_name"));
+				obj.put("artist_name", rs.getString("artist_name"));
+				obj.put("album_image", rs.getString("album_image"));
+					
+				jArray.add(obj);
+			}
+			jobj.put("list", jArray);
+		} catch (Exception error) {
+			error.printStackTrace();
+		}
+		return jobj;
+	}
+	
+	// 앨범 정보 읽기
+	public PlaylistVO albumRead(int bcode) {
+		PlaylistVO vo = new PlaylistVO();
+		try {
+			String sql = "select * from watermelon where acode = ?";
+			PreparedStatement ps = Database.CON.prepareStatement(sql);
+			ps.setInt(1, bcode);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				vo.setBcode(rs.getInt("bcode"));
+				vo.setAcode(rs.getInt("acode"));
+				vo.setTcode(rs.getInt("tcode"));
+				vo.setArtist_name(rs.getString("artist_name"));
+				vo.setAlbum_name(rs.getString("album_name"));
+				vo.setTrack_name(rs.getString("track_name"));
+				vo.setAlbum_image(rs.getString("album_image"));
+			}
+		} catch (Exception error) {
+			error.printStackTrace();
+		}
+		return vo;
+	}
+	// 앨범의 곡 정보 읽기
+		public JSONObject albumTrackRead(int bcode) {
+			JSONObject jobj = new JSONObject();
+			try {
+				String sql = "select * from watermelon where bcode = ?";
+				PreparedStatement ps = Database.CON.prepareStatement(sql);
+				ps.setInt(1, bcode);
+				ResultSet rs = ps.executeQuery();
+				JSONArray jArray = new JSONArray();
+				while (rs.next()) {
+					JSONObject obj = new JSONObject();
+					obj.put("tcode", rs.getInt("tcode"));
+					obj.put("acode", rs.getInt("acode"));
+					obj.put("bcode", rs.getInt("bcode"));
+					obj.put("album_image", rs.getString("album_image"));
+					obj.put("track_name", rs.getString("track_name"));
+					obj.put("album_name", rs.getString("album_name"));
+					obj.put("artist_name", rs.getString("artist_name"));
+					jArray.add(obj);
+				}
+				jobj.put("list", jArray);
+			} catch (Exception error) {
+				error.printStackTrace();
+			}
+			return jobj;
+		}
+	
+	// 가수 정보 읽기
+	public PlaylistVO artistRead(int acode) {
+		PlaylistVO vo = new PlaylistVO();
+		try {
+			String sql = "select * from watermelon where acode = ?";
+			PreparedStatement ps = Database.CON.prepareStatement(sql);
+			ps.setInt(1, acode);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				vo.setBcode(rs.getInt("bcode"));
+				vo.setAcode(rs.getInt("acode"));
+				vo.setTcode(rs.getInt("tcode"));
+				vo.setArtist_name(rs.getString("artist_name"));
+				vo.setAlbum_name(rs.getString("album_name"));
+				vo.setTrack_name(rs.getString("track_name"));
+				vo.setArtist_image(rs.getString("artist_image"));
+			}
+		} catch (Exception error) {
+			error.printStackTrace();
+		}
+		return vo;
+	}
+	
+	// 가수의 앨범 정보 읽기
+	public JSONObject artistAlbumRead(int acode, int bcode) {
+		JSONObject jobj = new JSONObject();
+		try {
+			String sql = "select * from artistalbum where acode = ? and bcode=?";
+			PreparedStatement ps = Database.CON.prepareStatement(sql);
+			ps.setInt(1, acode);
+			ps.setInt(2, bcode);
+			ResultSet rs = ps.executeQuery();
+			JSONArray jArray = new JSONArray();
+			while (rs.next()) {
+				JSONObject obj = new JSONObject();
+				obj.put("acode", rs.getInt("acode"));
+				obj.put("bcode", rs.getInt("bcode"));
+				obj.put("album_image", rs.getString("album_image"));
+				obj.put("artist_image", rs.getString("artist_image"));
+				obj.put("album_name", rs.getString("album_name"));
+				obj.put("artist_name", rs.getString("artist_name"));
+				jArray.add(obj);
+			}
+			jobj.put("list", jArray);
+		} catch (Exception error) {
+			error.printStackTrace();
+		}
+		return jobj;
+	}
+	
+	// 곡 정보 읽기
+	public PlaylistVO trackRead(int tcode) {
+		PlaylistVO vo = new PlaylistVO();
+		try {
+			String sql = "select * from watermelon where tcode = ?";
+			PreparedStatement ps = Database.CON.prepareStatement(sql);
+			ps.setInt(1, tcode);
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				vo.setBcode(rs.getInt("bcode"));
+				vo.setAcode(rs.getInt("acode"));
+				vo.setTcode(rs.getInt("tcode"));
+				vo.setArtist_image(rs.getString("artist_image"));
+				vo.setArtist_name(rs.getString("artist_name"));
+				vo.setAlbum_name(rs.getString("album_name"));
+				vo.setTrack_name(rs.getString("track_name"));
+				vo.setAlbum_image(rs.getString("album_image"));
+			}
+		} catch(Exception error) {
+			error.printStackTrace();
+		}
+		return vo;
+	}
+	
+	// 플레이리스트 삭제
+	public void delete(String id, int tcode) {
+		try {
+			String sql = "delete from playlist where id=? and playlist_tcode=?";
+			CallableStatement cs = Database.CON.prepareCall(sql);
+			cs.setString(1, id);
+			cs.setInt(2, tcode);
+			cs.execute();
+		} catch(Exception error) {
+			error.printStackTrace();
+		}
+	}
+	
+	// 플레이리스트 입력
+	public void insert(String id, int tcode) {
+		try {
+			String sql = "insert into playlist values(?, ?)";
+			PreparedStatement ps = Database.CON.prepareStatement(sql);
+			ps.setString(1, id);
+			ps.setInt(2, tcode);
+			ps.execute();
+		} catch(Exception error) {
+			error.printStackTrace();
+		}
+	}
+	
+	// 플레이리스트 출력
+	public JSONObject list(String id) {
+		JSONObject jobj = new JSONObject();
+		try {
+			String sql = "select * from playlistview where id = ?";
+			PreparedStatement ps = Database.CON.prepareStatement(sql);
+			ps.setString(1, id);
+			ResultSet rs = ps.executeQuery();
+			JSONArray jArray = new JSONArray();
+			while(rs.next()) {
+				JSONObject obj = new JSONObject();
+				obj.put("id", rs.getString("id"));
+				obj.put("playlist_tcode", rs.getString("playlist_tcode"));
+				obj.put("acode", rs.getInt("acode"));
+				obj.put("bcode", rs.getInt("bcode"));
+				obj.put("album_image", rs.getString("album_image"));
+				obj.put("track_name", rs.getString("track_name"));
+				obj.put("album_name", rs.getString("album_name"));
+				obj.put("artist_name", rs.getString("artist_name"));
+				jArray.add(obj);
+			}
+			jobj.put("list", jArray);
+		} catch(Exception error) {
+			error.printStackTrace();
+		}
+		return jobj;
+	}
+}

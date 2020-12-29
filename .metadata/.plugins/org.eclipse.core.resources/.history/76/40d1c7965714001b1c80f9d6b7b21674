@@ -1,0 +1,194 @@
+package playlist;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import cart.CartDAO;
+
+@WebServlet(value={"/list.json","/createcart", "/insert", "/playlistdelete", "/likelistdelete", "/trackRead", "/artistRead", "/albumRead", "/albumTrackRead", "/artistAlbumRead", "/likelist","/playlist.json", "/chart.json"})
+public class playlistServlet extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
+		response.setContentType("text/html; charset=UTF-8");
+		PlaylistDAO dao = new PlaylistDAO();
+		PlaylistVO vo = new PlaylistVO();
+		PrintWriter out = response.getWriter();
+		String id = request.getParameter("id");
+		switch(request.getServletPath()) {
+		case "/insert" :
+			String track = request.getParameter("track");
+			int code = dao.read(track);
+			dao.insert(id, code);
+			break;
+		case "/createcart" :
+			CartDAO cdao = new CartDAO();
+			String cart_name = request.getParameter("cart_name");
+			cdao.create(id, cart_name);
+			break;
+		case "/list.json" :
+			out.println(dao.list(id));
+			break;
+		case "/trackRead" :
+			tcode = Integer.parseInt(request.getParameter("tcode"));
+			request.setAttribute("vo", dao.trackRead(tcode));
+			RequestDispatcher rd = request.getRequestDispatcher("trackRead.jsp");
+			rd.forward(request, response);
+			break;
+		case "/artistRead" :
+			int acode = Integer.parseInt(request.getParameter("acode"));
+			request.setAttribute("vo", dao.trackRead(acode));
+			rd = request.getRequestDispatcher("artistRead.jsp");
+			rd.forward(request, response);
+			break;
+		case "/albumRead" :
+			int bcode = Integer.parseInt(request.getParameter("bcode"));
+			request.setAttribute("vo", dao.trackRead(bcode));
+			rd = request.getRequestDispatcher("albumRead.jsp");
+			rd.forward(request, response);
+			break;
+		case "/albumTrackRead" :
+			bcode = Integer.parseInt(request.getParameter("bcode"));
+			out.println(dao.albumTrackRead(bcode));
+			break;
+		case "/artistAlbumRead" :
+			acode = Integer.parseInt(request.getParameter("acode"));
+			bcode = Integer.parseInt(request.getParameter("bcode"));
+			out.println(dao.artistAlbumRead(acode, bcode));
+			break;
+		case "/likelist" :
+			id = request.getParameter("id");
+			out.println(dao.likelist(id));
+			break;
+		case "/playlistdelete" :
+			tcode = Integer.parseInt(request.getParameter("tcode"));
+			dao.delete(id, tcode);
+			break;
+		case "/likelistdelete" :
+			id = request.getParameter("id");
+			tcode = Integer.parseInt(request.getParameter("tcode"));
+			dao.likelistdelete(id, tcode);
+			break;
+		}
+		int i=1;
+		int page=request.getParameter("page")==null? 1: Integer.parseInt(request.getParameter("page"));
+		
+		
+		int start = ((page-1) * 12) + 1;
+		int end = page * 12;
+		
+		switch(request.getServletPath()) {
+		case "/playlist.json":
+			JSONArray jarray=new JSONArray();
+			
+			
+			try {
+				Document doc=Jsoup.connect("https://www.melon.com/").get();
+				
+				Elements s = doc.select(".checkEllipsis");
+				ArrayList<String> aArray = new ArrayList<String>();
+				for (Element e:s) {
+					String singer = e.text();
+					aArray.add(singer);
+				}
+				
+				Elements es=doc.select(".img");
+				ArrayList<String> iArray = new ArrayList<String>();
+				for(Element e:es) {
+					String image=e.select("img").attr("src");
+					iArray.add(image);
+					
+				}
+				
+				for(int z=0; z<iArray.size(); z++) {
+					if(i >= start && i <= end) {
+						JSONObject job=new JSONObject();
+						job.put("i", i);
+						job.put("image", iArray.get(z));
+						job.put("singer", aArray.get(z));
+						
+						jarray.add(job);
+					}
+					i++;
+				}
+				
+				out.println(jarray.toJSONString());
+			}catch(Exception e) {
+				System.out.println(e.toString());
+			}
+			break;
+		case "/chart.json":
+			jarray=new JSONArray();
+			int cstart = ((page-1) * 9) + 1;
+			int cend = page * 10;
+			try {
+				Document doc=Jsoup.connect("https://www.melon.com/chart/index.htm").get();
+				
+				Elements s=doc.select(".checkEllipsis");
+				ArrayList<String> aArray = new ArrayList<String>();
+				for (Element e:s) {
+					String artist = e.text();
+					aArray.add(artist);
+				}
+				
+				Elements ss = doc.select(".rank01");
+				ArrayList<String> bArray = new ArrayList<String>();
+				for (Element e:ss) {
+					String album = e.text();
+					bArray.add(album);
+				}
+				
+				Elements es=doc.select(".image_typeAll");
+				ArrayList<String> iArray = new ArrayList<String>();
+				for(Element e:es) {
+					String image=e.select("img").attr("src");
+					iArray.add(image);
+				}
+				for(int z=0; z<iArray.size(); z++) {
+					
+					if(i >= cstart && i <= cend) {
+					/*String album=e.select(".song .mlog").text();
+					}
+					String artist=e.select(".checkEllipsisRealtimeChart .mlog").text();
+					String image=e.select("img").attr("src");*/
+					
+					JSONObject job=new JSONObject();
+					job.put("i", i);
+					job.put("album",bArray.get(z));
+					job.put("artist", aArray.get(z));
+					job.put("image", iArray.get(z));
+					jarray.add(job);
+				}
+					i++;
+				}
+				out.println(jarray.toJSONString());
+			}catch(Exception e) {
+				System.out.println(e.toString());
+			}
+			break;
+		
+		}
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+	}
+
+}

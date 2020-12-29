@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Copy 6 elements to &apos;lib&apos;&#x0D;&#x0A;- Original project: &apos;playlist&apos;&#x0D;&#x0A;- Destination element: &apos;lib&apos;&#x0D;&#x0A;- Original elements:&#x0D;&#x0A;     cos.jar&#x0D;&#x0A;     standard.jar&#x0D;&#x0A;     jquery.banner.js&#x0D;&#x0A;     jstl.jar&#x0D;&#x0A;     json-simple-1.1.1.jar&#x0D;&#x0A;     jsoup-1.13.1.jar" description="Copy files" element1="WebContent/WEB-INF/lib/cos.jar" element2="WebContent/WEB-INF/lib/standard.jar" element3="WebContent/WEB-INF/lib/jquery.banner.js" element4="WebContent/WEB-INF/lib/jstl.jar" element5="WebContent/WEB-INF/lib/json-simple-1.1.1.jar" element6="WebContent/WEB-INF/lib/jsoup-1.13.1.jar" files="6" flags="589830" folders="0" id="org.eclipse.jdt.ui.copy" policy="org.eclipse.jdt.ui.copyResources" stamp="1604467471646" target="/addr/WebContent/WEB-INF/lib" units="0" version="1.0"/>
+</session>
